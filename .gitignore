@@ -1,0 +1,7 @@
+# create this as .gitignore in your project folder
+__pycache__/
+*.py[cod]
+build/
+*.spec
+.venv/
+*.csv
