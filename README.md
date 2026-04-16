@@ -100,15 +100,7 @@ No Python needed. Download `data-analyst-agent.exe` from the [Releases](../../re
 ### Groq (cloud)
 - Get a free API key at [console.groq.com/keys](https://console.groq.com/keys)
 - Select option `[2]` when prompted and paste your key
-- Recommended model: `llama-3.3-70b-versatile`
-
-| Model | Speed | Quality |
-|---|---|---|
-| llama-3.3-70b-versatile | Fast | ⭐ Best |
-| llama3-70b-8192 | Fast | Great |
-| llama3-8b-8192 | Fastest | Good |
-| mixtral-8x7b-32768 | Medium | Good |
-| gemma2-9b-it | Fast | Good |
+- Uses `llama-3.3-70b-versatile` automatically
 
 ---
 
