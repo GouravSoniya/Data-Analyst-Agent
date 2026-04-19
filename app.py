@@ -110,15 +110,25 @@ def load_csv(file) -> tuple[pd.DataFrame | None, str | None, str | None]:
         return None, None, str(e)
 
 
-def make_client(provider: str, api_key: str = "") -> tuple[OpenAI, str] | tuple[None, str]:
-    if provider == "LM Studio":
-        client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
-        return client, "local-model"
-    else:
-        if not api_key.strip():
-            return None, "Groq API key is required."
-        client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key.strip())
-        return client, GROQ_MODEL
+def load_api_key() -> str | None:
+    """Load Groq key — st.secrets when deployed, .env when local."""
+    try:
+        return st.secrets["GROQ_API_KEY"]       # Streamlit Cloud
+    except Exception:
+        pass
+    from dotenv import load_dotenv
+    # Explicit path — always loads the .env next to app.py
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    load_dotenv(dotenv_path=env_path, override=True)
+    return os.getenv("GROQ_API_KEY")
+
+
+def make_client():
+    api_key = load_api_key()
+    if not api_key:
+        return None, "GROQ_API_KEY not found in .env or Streamlit secrets."
+    client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key.strip())
+    return client, GROQ_MODEL
 
 
 # ── Session state init ────────────────────────────────────────────────────────
@@ -126,16 +136,26 @@ def init_state():
     defaults = {
         "client": None,
         "model": None,
-        "namespace": {},          # shared Python execution scope
-        "history": [],            # LLM message history
-        "chat_messages": [],      # display messages [{role, content, type}]
+        "namespace": {},
+        "history": [],
+        "chat_messages": [],
         "csv_loaded": False,
         "csv_preview": "",
-        "provider_set": False,
+        "key_error": None,
+        "pending_input": None,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
+
+    # Auto-connect once on first load
+    if st.session_state.client is None and st.session_state.key_error is None:
+        client, model_or_err = make_client()
+        if client is None:
+            st.session_state.key_error = model_or_err
+        else:
+            st.session_state.client = client
+            st.session_state.model = model_or_err
 
 
 # ── Agent step loop ───────────────────────────────────────────────────────────
@@ -267,45 +287,17 @@ def main():
         st.title("📊 Data Analyst Agent")
         st.divider()
 
-        # Provider config
-        st.subheader("🔌 Backend")
-        provider = st.radio("Provider", ["LM Studio", "Groq"], horizontal=True)
-
-        api_key = ""
-        if provider == "Groq":
-            api_key = st.text_input(
-                "Groq API Key",
-                type="password",
-                placeholder="gsk_...",
-                help="Get a free key at console.groq.com/keys",
-            )
-
-        if st.button("Connect", use_container_width=True):
-            client, model_or_err = make_client(provider, api_key)
-            if client is None:
-                st.error(model_or_err)
-            else:
-                st.session_state.client = client
-                st.session_state.model = model_or_err
-                st.session_state.provider_set = True
-                st.success(f"Connected → {model_or_err}")
-
-        st.divider()
-
         # CSV upload
         st.subheader("📁 Upload CSV")
         uploaded = st.file_uploader("Choose a CSV file", type=["csv"])
 
-        if uploaded and st.session_state.provider_set:
+        if uploaded:
             if st.button("Load CSV", use_container_width=True):
                 df, preview, err = load_csv(uploaded)
                 if err:
                     st.error(f"Failed to load CSV: {err}")
                 else:
-                    # Save df into execution namespace
                     st.session_state.namespace = {"df": df}
-
-                    # Build fresh LLM history with the system prompt
                     st.session_state.history = [{
                         "role": "system",
                         "content": build_system_prompt(preview),
@@ -315,10 +307,6 @@ def main():
                     st.session_state.csv_loaded = True
                     st.success(f"Loaded {len(df)} rows × {len(df.columns)} columns")
 
-        elif uploaded and not st.session_state.provider_set:
-            st.warning("Connect to a provider first.")
-
-        # Show preview
         if st.session_state.csv_loaded:
             st.divider()
             st.subheader("🔍 Data Preview")
@@ -331,35 +319,37 @@ def main():
         if st.button("🗑️ Clear Chat", use_container_width=True):
             st.session_state.chat_messages = []
             if st.session_state.csv_loaded:
-                preview = st.session_state.csv_preview
                 st.session_state.history = [{
                     "role": "system",
-                    "content": build_system_prompt(preview),
+                    "content": build_system_prompt(st.session_state.csv_preview),
                 }]
 
     # ── Main panel ────────────────────────────────────────────────────────────
-    if not st.session_state.provider_set:
-        st.info("👈 Connect to a backend provider in the sidebar to get started.")
+    if st.session_state.key_error:
+        st.error(f"⚠️ {st.session_state.key_error}")
+        st.code("GROQ_API_KEY=gsk_your_key_here", language="bash")
+        st.caption("Add this to your `.env` file and restart.")
         return
 
     if not st.session_state.csv_loaded:
         st.info("👈 Upload and load a CSV file in the sidebar.")
         return
 
-    # Render existing chat
     render_chat()
 
-    # Chat input
     user_input = st.chat_input("Ask anything about your data…")
     if user_input:
-        # Append user message to display immediately
         st.session_state.chat_messages.append({
             "role": "user",
             "content": user_input,
         })
+        st.session_state.pending_input = user_input
+        st.rerun()  # rerun #1 — renders user message immediately
 
-        run_agent(user_input)
-        st.rerun()
+    if st.session_state.pending_input:
+        run_agent(st.session_state.pending_input)
+        st.session_state.pending_input = None
+        st.rerun()  # rerun #2 — renders agent response
 
 
 if __name__ == "__main__":
