@@ -11,4 +11,5 @@ dependencies = [
     "openai>=2.31.0",
     "pandas>=3.0.2",
     "pyinstaller>=6.19.0",
+    "streamlit>=1.56.0",
 ]
