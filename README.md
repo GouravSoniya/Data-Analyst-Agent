@@ -1,6 +1,6 @@
-# 🤖 Data Analyst Agent
+# Data Analyst Agent
 
-An intelligent AI-powered data analysis tool that transforms natural language questions into executable Python code and delivers accurate, real-time insights from your CSV files. No hallucinations—just real data analysis.
+An intelligent AI-powered data analysis tool that transforms natural language questions into executable Python code and delivers accurate, real-time insights from your CSV files. No hallucinations—just real computation.
 
 LIVE DEMO : https://data-analyst-agent-xskgltunuwo6copquqldw9.streamlit.app/
 
@@ -9,38 +9,38 @@ LIVE DEMO : https://data-analyst-agent-xskgltunuwo6copquqldw9.streamlit.app/
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
 [![Code style: Streamlit](https://img.shields.io/badge/Web%20UI-Streamlit-FF4B4B)](https://streamlit.io/)
 
-## 📋 Overview
+## Overview
 
-Data Analyst Agent is a multi-interface system that combines the power of large language models (LLMs) with safe, sandboxed Python execution. Ask questions about your data in plain English, and the agent intelligently decides whether to write and execute Python code or respond directly—all while maintaining security through strict code sandboxing.
+Data Analyst Agent is a multi-interface system that combines the power of large language models (LLMs) with safe, sandboxed Python execution. Ask questions about your data in plain English, and the agent writes real Python code, executes it safely, and delivers accurate insights backed by computation—not hallucinations.
 
 ### Key Features
 
-✅ **Dual Interfaces**
+[PASS] **Dual Interfaces**
 - CLI for power users and automation
 - Streamlit web app for interactive analysis
 
-✅ **Flexible Backend Options**
+[PASS] **Flexible Backend Options**
 - **LM Studio**: Fully local, no internet required, complete data privacy
 - **Groq API**: Free cloud-based, ultra-fast inference
 
-✅ **Real Code Execution**
+[PASS] **Real Code Execution**
 - Agent writes actual Python code instead of guessing
 - Results are guaranteed accurate based on your real data
 - No hallucinations—every answer backed by computation
 
-✅ **Production-Ready Safety**
+[PASS] **Production-Ready Safety**
 - Sandboxed code execution environment
 - Blocks file system, network, and dangerous operations
 - Safe library support (pandas, numpy, matplotlib)
 
-✅ **Multi-Step Reasoning**
+[PASS] **Multi-Step Reasoning**
 - Agent can iterate and refine answers
 - Automatic handling of code execution errors
 - Smart fallback to plain-text responses when appropriate
 
 ---
 
-## 🎯 Use Cases
+## Use Cases
 
 - **Business Intelligence**: Analyze sales trends, customer demographics, financial metrics
 - **Data Exploration**: Understand data distributions, relationships, and anomalies
@@ -50,7 +50,7 @@ Data Analyst Agent is a multi-interface system that combines the power of large 
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -82,7 +82,7 @@ No Python required! Download the compiled `.exe` from the [Releases](../../relea
 
 ---
 
-## 💻 Usage
+## Usage
 
 ### CLI Interface (main.py)
 
@@ -117,7 +117,7 @@ Select backend:
 Enter 1 or 2: 2
 Enter your Groq API key: gsk_...
 
-✅ Using Groq with llama-3.3-70b-versatile
+[PASS] Using Groq with llama-3.3-70b-versatile
 
 CSV path: sales_data.csv
 
@@ -159,7 +159,7 @@ uv run streamlit run app.py
 
 ---
 
-## 🏗️ How It Works
+## How It Works
 
 The agent operates in an intelligent loop:
 
@@ -192,7 +192,7 @@ Repeat or Finalize
 
 ---
 
-## 🔧 Backend Configuration
+## Backend Configuration
 
 ### LM Studio (Local & Private)
 
@@ -203,10 +203,10 @@ Repeat or Finalize
 4. Select `[1]` when prompted in the agent
 
 **Advantages:**
-- ✅ Completely offline—data never leaves your machine
-- ✅ Free to use
-- ✅ Full control over model choice
-- ✅ Privacy-focused
+- [PASS] Completely offline—data never leaves your machine
+- [PASS] Free to use
+- [PASS] Full control over model choice
+- [PASS] Privacy-focused
 
 **Disadvantages:**
 - Slower inference than cloud APIs
@@ -222,10 +222,10 @@ Repeat or Finalize
 **Model Used:** `llama-3.3-70b-versatile` (fast, 70B parameter model)
 
 **Advantages:**
-- ✅ Ultra-fast inference
-- ✅ Free tier available
-- ✅ No local setup required
-- ✅ Always available
+- [PASS] Ultra-fast inference
+- [PASS] Free tier available
+- [PASS] No local setup required
+- [PASS] Always available
 
 **Disadvantages:**
 - Requires internet connection
@@ -234,26 +234,26 @@ Repeat or Finalize
 
 ---
 
-## 🔒 Security & Sandboxing
+## Security & Sandboxing
 
 ### Protected Execution Environment
 
 The `executor.py` module provides strict sandboxing that **blocks**:
 
 ```
-❌ File System Access
+[X] File System Access
    - open(), os.remove(), shutil operations
 
-❌ Network Access
+[X] Network Access
    - requests, httpx, socket, urllib
 
-❌ Dangerous Built-ins
+[X] Dangerous Built-ins
    - eval, exec, compile, __import__
 
-❌ Process Management
+[X] Process Management
    - subprocess, multiprocessing, threading
 
-❌ Other Risks
+[X] Other Risks
    - pickle (deserialization attacks)
    - ctypes, cffi (low-level access)
 ```
@@ -261,15 +261,15 @@ The `executor.py` module provides strict sandboxing that **blocks**:
 ### Allowed Operations
 
 ```
-✅ Data Analysis
+[PASS] Data Analysis
    - pandas (DataFrames, groupby, aggregations)
    - numpy (arrays, calculations)
    - Standard library (math, statistics, collections)
 
-✅ Visualization
+[PASS] Visualization
    - matplotlib (basic plotting)
 
-✅ Computation
+[PASS] Computation
    - Built-in functions (len, sum, max, min)
    - List/dict comprehensions
    - String and numeric operations
@@ -285,7 +285,7 @@ The `executor.py` module provides strict sandboxing that **blocks**:
 
 ---
 
-## 📦 Project Structure
+## Project Structure
 
 ```
 Data-Analyst-Agent/
@@ -321,7 +321,7 @@ Data-Analyst-Agent/
 
 ---
 
-## 📚 Dependencies
+## Dependencies
 
 ```
 Core:
@@ -346,7 +346,7 @@ For complete dependency list, see `pyproject.toml`.
 
 ---
 
-## 🛠️ Advanced Setup
+## Advanced Setup
 
 ### Build Windows Executable
 
@@ -380,7 +380,7 @@ GROQ_API_KEY=gsk_your_api_key_here
 
 ---
 
-## 💡 Example Queries
+## Example Queries
 
 ```
 # Financial Analysis
@@ -406,7 +406,7 @@ GROQ_API_KEY=gsk_your_api_key_here
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -432,7 +432,7 @@ GROQ_API_KEY=gsk_your_api_key_here
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Areas for improvement:
 
@@ -453,13 +453,13 @@ Contributions are welcome! Areas for improvement:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙋 Support & Feedback
+## Support & Feedback
 
 - **Issues**: Open an issue on GitHub for bugs and feature requests
 - **Discussions**: Use GitHub Discussions for questions and ideas
@@ -467,7 +467,7 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 
 ---
 
-## 🚀 Future Roadmap
+## Future Roadmap
 
 - [ ] Support for multiple file formats (JSON, Excel, SQL databases)
 - [ ] Advanced charting and visualization library
@@ -479,7 +479,7 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 
 ---
 
-## 📝 Notes
+## Notes
 
 - Data safety is paramount—code runs in a restricted sandbox
 - LLM responses are deterministic (temperature set to 0.3)
@@ -488,4 +488,4 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 
 ---
 
-Made with ❤️ by [GouravSoniya](https://github.com/GouravSoniya)
+Made with love by [GouravSoniya](https://github.com/GouravSoniya)
