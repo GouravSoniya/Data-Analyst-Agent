@@ -2,6 +2,9 @@
 
 An intelligent AI-powered data analysis tool that transforms natural language questions into executable Python code and delivers accurate, real-time insights from your CSV files. No hallucinations—just real data analysis.
 
+LIVE DEMO : https://data-analyst-agent-xskgltunuwo6copquqldw9.streamlit.app/
+
+
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
 [![Code style: Streamlit](https://img.shields.io/badge/Web%20UI-Streamlit-FF4B4B)](https://streamlit.io/)
